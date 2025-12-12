@@ -1,0 +1,7 @@
+---
+# uniffi-bindgen-react-native configuration for libsignal
+# See https://jhugman.github.io/uniffi-bindgen-react-native/ for more info
+
+rust:
+  directory: ../
+  manifestPath: rust/bridge/react-native/Cargo.toml
