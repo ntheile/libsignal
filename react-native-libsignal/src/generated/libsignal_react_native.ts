@@ -53,7 +53,7 @@ export function generateKeyPair(): SignalKeyPair {
   throw new Error('Not yet generated. Run ./build.sh to generate bindings.');
 }
 
-export function generatePreKey(_id: number): SignalPreKeyRecord {
+export function generatePreKey(_id: number): Promise<SignalPreKeyRecord> {
   throw new Error('Not yet generated. Run ./build.sh to generate bindings.');
 }
 
@@ -61,7 +61,7 @@ export function generateSignedPreKey(
   _id: number,
   _timestamp: bigint,
   _identityKeyPair: SignalIdentityKeyPair
-): SignalSignedPreKeyRecord {
+): Promise<SignalSignedPreKeyRecord> {
   throw new Error('Not yet generated. Run ./build.sh to generate bindings.');
 }
 

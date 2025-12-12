@@ -168,15 +168,23 @@ pub struct SignalPreKeyRecord {
     pub private_key: SignalPrivateKey,
 }
 
-impl From<PreKeyRecord> for SignalPreKeyRecord {
-    fn from(record: PreKeyRecord) -> Self {
-        Self {
-            id: record.id().expect("prekey should have id").into(),
-            public_key: record.public_key().expect("prekey should have public key").into(),
+impl TryFrom<PreKeyRecord> for SignalPreKeyRecord {
+    type Error = SignalError;
+
+    fn try_from(record: PreKeyRecord) -> Result<Self, Self::Error> {
+        Ok(Self {
+            id: record.id().map_err(|e| SignalError::ProtocolError {
+                reason: e.to_string(),
+            })?.into(),
+            public_key: record.public_key().map_err(|e| SignalError::ProtocolError {
+                reason: e.to_string(),
+            })?.into(),
             private_key: SignalPrivateKey {
-                key_bytes: record.private_key().expect("prekey should have private key").serialize().to_vec(),
+                key_bytes: record.private_key().map_err(|e| SignalError::ProtocolError {
+                    reason: e.to_string(),
+                })?.serialize().to_vec(),
             },
-        }
+        })
     }
 }
 
@@ -190,17 +198,29 @@ pub struct SignalSignedPreKeyRecord {
     pub signature: Vec<u8>,
 }
 
-impl From<SignedPreKeyRecord> for SignalSignedPreKeyRecord {
-    fn from(record: SignedPreKeyRecord) -> Self {
-        Self {
-            id: record.id().expect("signed prekey should have id").into(),
-            timestamp: record.timestamp().expect("signed prekey should have timestamp").epoch_millis(),
-            public_key: record.public_key().expect("signed prekey should have public key").into(),
+impl TryFrom<SignedPreKeyRecord> for SignalSignedPreKeyRecord {
+    type Error = SignalError;
+
+    fn try_from(record: SignedPreKeyRecord) -> Result<Self, Self::Error> {
+        Ok(Self {
+            id: record.id().map_err(|e| SignalError::ProtocolError {
+                reason: e.to_string(),
+            })?.into(),
+            timestamp: record.timestamp().map_err(|e| SignalError::ProtocolError {
+                reason: e.to_string(),
+            })?.epoch_millis(),
+            public_key: record.public_key().map_err(|e| SignalError::ProtocolError {
+                reason: e.to_string(),
+            })?.into(),
             private_key: SignalPrivateKey {
-                key_bytes: record.private_key().expect("signed prekey should have private key").serialize().to_vec(),
+                key_bytes: record.private_key().map_err(|e| SignalError::ProtocolError {
+                    reason: e.to_string(),
+                })?.serialize().to_vec(),
             },
-            signature: record.signature().expect("signed prekey should have signature"),
-        }
+            signature: record.signature().map_err(|e| SignalError::ProtocolError {
+                reason: e.to_string(),
+            })?,
+        })
     }
 }
 
@@ -251,10 +271,10 @@ pub fn generate_key_pair() -> SignalKeyPair {
 
 /// Generate a new pre-key with the given ID.
 #[uniffi::export]
-pub fn generate_pre_key(id: u32) -> SignalPreKeyRecord {
+pub fn generate_pre_key(id: u32) -> Result<SignalPreKeyRecord, SignalError> {
     let key_pair = KeyPair::generate(&mut rand::rng());
     let record = PreKeyRecord::new(PreKeyId::from(id), &key_pair);
-    record.into()
+    record.try_into()
 }
 
 /// Generate a new signed pre-key with the given ID.
@@ -279,7 +299,7 @@ pub fn generate_signed_pre_key(
         &key_pair,
         &signature,
     );
-    Ok(record.into())
+    record.try_into()
 }
 
 /// Calculate the fingerprint for identity verification.
