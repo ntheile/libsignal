@@ -140,6 +140,34 @@ const version = libsignal.getVersion();
 - `calculateFingerprint(...)`: Calculate identity fingerprint for verification
 - `getVersion()`: Get the library version
 
+## Example App
+
+An example React Native app is included in the `example/` directory that demonstrates all the library features.
+
+### Running the Example
+
+```bash
+# Install dependencies (from react-native-libsignal directory)
+yarn install
+
+# Build native bindings first
+./build.sh
+
+# Run on iOS
+cd example && yarn ios
+
+# Run on Android
+cd example && yarn android
+```
+
+The example app includes tests for:
+- Key generation (identity, pre-keys, signed pre-keys)
+- Signature creation and verification
+- ECDH key agreement
+- AES-GCM encryption/decryption
+- HKDF key derivation
+- Fingerprint calculation
+
 ## Building from Source
 
 ### Prerequisites
