@@ -35,3 +35,35 @@ java/server/src/main/resources/*.dll
 Brewfile.lock.json
 
 __pycache__
+
+# react-native-libsignal
+/react-native-libsignal/node_modules
+/react-native-libsignal/lib
+/react-native-libsignal/rust_modules
+/react-native-libsignal/*.tgz
+/react-native-libsignal/ReactNativeLibsignalFramework.xcframework
+/react-native-libsignal/example/node_modules
+/react-native-libsignal/example/ios/Pods
+/react-native-libsignal/example/ios/build
+/react-native-libsignal/example/android/build
+/react-native-libsignal/example/android/app/build
+
+# npm
+node_modules/
+npm-debug.log*
+.npm
+
+# yarn
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+yarn-debug.log*
+yarn-error.log*
+
+# pnpm
+pnpm-debug.log*
+.pnpm-store/
